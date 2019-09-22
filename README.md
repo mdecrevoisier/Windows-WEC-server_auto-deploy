@@ -16,6 +16,13 @@ The scripts have to be executed on a future Windows Event collector server:
 * 5-Execute the script **Deploy-Toolkit** to import and configure all the event channels and subscriptions from Palantir. 
 * 6-Open the Windows Event Viewer and verify that your WEF clients are correctly reporting logs into the event channels.
 
+## Demo overview
+# Set WEC role
+![](/demo/1-Set-WEC-role.gif)
+
+# Deploy toolkit
+![](/demo/2-Deploy-Toolkit.gif)
+
 
 ## Supported environment
 The scripts have been tested on the following environments:
