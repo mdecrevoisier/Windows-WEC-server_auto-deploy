@@ -1,0 +1,9 @@
+Log_name, Log_size_in_Bytes
+"WEC-Authentication", 4294967296
+"WEC2-Object-Manipulation", 1073741824
+"WEC7-Privilege-Use", 1073741824
+"WEC-Process-Execution", 1073741824
+"WEC4-Shares", 1073741824
+"WEC2-Task-Scheduler", 1073741824
+"WEC3-Account-Management", 1073741824
+"WEC6-Sysmon", 1073741824
