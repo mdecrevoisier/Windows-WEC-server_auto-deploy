@@ -11,7 +11,7 @@ This script is intended to enhance the Windows Event Collector (WEC) server depl
 The scripts have to be executed on a future Windows Event collector server:
 * 1-Configure your Windows Event Forwarding clients to target the required Windows Event Collector server (usually over GPO).
 * 2-Download and extract the repository from [Palantir](https://github.com/palantir/windows-event-forwarding.git).
-* 3-Download the two PowerShell scripts provided in this repository and place them into the previously downloaded repository.
+* 3-Download the two PowerShell scripts (+ the CSV configuration file) provided in this repository and place them into the previously downloaded repository.
 * 4-Execute the script **Set-WEC-role** to configure the WEC server role.
 * 5-Execute the script **Deploy-Toolkit** to import and configure all the event channels and subscriptions from Palantir. 
 * 6-Open the Windows Event Viewer and verify that your WEF clients are correctly reporting logs into the event channels.
@@ -22,7 +22,6 @@ The scripts have to be executed on a future Windows Event collector server:
 
 # Deploy toolkit
 ![](/demo/2-Deploy-Toolkit.gif)
-
 
 ## Supported environment
 The scripts have been tested on the following environments:
