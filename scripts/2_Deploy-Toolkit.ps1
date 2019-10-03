@@ -1,3 +1,9 @@
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 ### Author : Michel de CREVOISIER
 ### v1.50 - 2019-08-26
 ###
@@ -62,6 +68,7 @@ else {
 
 
 ###### 3-Stopping dependant services ######
+# In case there's a third party agent for collecting logs, it shall be stopped. Here NXLog is used as an example. 
 
 write-host ""
 write-host "3-Stopping dependant services" -foregroundcolor "yellow"
@@ -179,7 +186,7 @@ write-host "   6.2-Increasing high usage log files to higher size" -foregroundco
 # Verify CSV path
 write-host ""
 write-host "Verifying CSV file..." -foregroundcolor "yellow" 
-$CSV_file = "..\custom_log_size_settings.csv"
+$CSV_file = "custom_log_size_settings.csv"
     if ((Test-Path $CSV_file) -And (Test-Path $CSV_file -PathType leaf)){
         write-host "CSV file is valid, continuing..." -foregroundcolor "green" 
         write-host ""
@@ -268,6 +275,6 @@ ForEach ($Subscription in Get-ChildItem *.xml)
 ###### FINAL CONFIRMATION ######
 write-host ""
 write-host "################################################" -foregroundcolor "green" 
-write-host " WEC toolkit deployement successfully performed"  -foregroundcolor "green" 
+write-host " WEC toolkit deployment successfully performed"  -foregroundcolor "green" 
 write-host "################################################" -foregroundcolor "green" 
 write-host ""
