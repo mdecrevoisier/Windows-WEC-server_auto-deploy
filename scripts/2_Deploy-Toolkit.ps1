@@ -10,7 +10,7 @@
 ### Tested on: Server 2008 R2 (requires removal of <#Requires -RunAsAdministrator>), Server 2012 R2, Server 2016 and Server 2019
 ### Script purpose: import custom channels and subscriptions to enhance Windows log collection
 ### Script steps:
-###     1-Verify if configuration foldersa re present
+###     1-Verify if configuration folders are present
 ###     2-Prompt for moving (or not) custom event logs to a separated hard drive
 ###     3-Stop dependant Windows services (NXLog and WEC)
 ###     4-Import custom channel structure
