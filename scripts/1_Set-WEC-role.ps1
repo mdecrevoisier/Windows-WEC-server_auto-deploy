@@ -5,9 +5,9 @@
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ### Author : Michel de CREVOISIER
-### v1.50 - 2019-26-08
+### v1.51 - 2019-11-22
 ###
-### Tested on: Server 2008 R2 (requires removal of <#Requires -RunAsAdministrator> line), Server 2012 R2, Server 2016 and Server 2019
+### Tested on: Server 2008 R2 (requires removal of <#Requires -RunAsAdministrator>), Server 2012 R2, Server 2016 and Server 2019
 ### Script purpose: configure a Windows host as a Windows collector
 ### Script steps:
 ###     1-Enable Windows Event Collector Service
