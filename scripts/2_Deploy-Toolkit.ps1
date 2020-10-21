@@ -5,7 +5,7 @@
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ### Author : Michel de CREVOISIER
-### v1.51 - 2019-11-22
+### v2.50 - 27/08/2020
 ###
 ### Tested on: Server 2008 R2 (requires removal of <#Requires -RunAsAdministrator>), Server 2012 R2, Server 2016 and Server 2019
 ### Script purpose: import custom channels and subscriptions to enhance Windows log collection
@@ -16,7 +16,7 @@
 ###     4-Import custom channel structure
 ###     5-Move event log files to a separated hard drive (if requested)
 ###     6-Increase default log files size
-###     7-Start dependant Windows services (NXLog and WEC)
+###     7-Start relevant services (NXLog and Windows Collector)
 ###     8-Import custom subscriptions
 ###
 
@@ -28,7 +28,7 @@
 ###### 1-Verify if configuration folders are present ######
 write-host ""
 write-host "1-Verifying configuration folders presence" -foregroundcolor "yellow"
-if ((Test-Path wef-subscriptions) -And (Test-Path windows-event-channels)){
+if ((Test-Path windows-event-channels) -And (Test-Path wef-subscriptions_COMPACT) -And (Test-Path wef-subscriptions_STANDARD)){
     write-host "Configuration folders exist, continuing..." -foregroundcolor "green" 
 }
 else {
@@ -39,7 +39,7 @@ else {
 
 ###### 2-Prompt for moving (or not) custom event logs to a separated hard drive ######
 write-host ""
-write-host "2-Moving custom event log files to a separated hard drive?" -foregroundcolor "yellow"
+write-host "3-Moving custom event log files to a separated hard drive?" -foregroundcolor "yellow"
 
 # Prompt requesting for moving custom (or not) event log to a separated hard drive
 $Option_custom_location = Read-Host -Prompt "It is recommended to move the new custom event log files to a separated hard drive. Would like to proceed with this recommended approach (y/n)?" 
@@ -67,11 +67,36 @@ else {
 }
 
 
-###### 3-Stopping dependant services ######
+
+###### 3-Prompt for choosing standard or compact toolkit mode ######
+write-host ""
+write-host "2-Would you like to go with 'standard' or 'compact' toolkit mode?" -foregroundcolor "yellow"
+
+# Prompt requesting for choosing the toolkit mode
+$Option_toolkit_mode = Read-Host -Prompt "Standard mode is the default and most suitable mode for most organization with less than 500 source clients. 
+In case of having more than 500 source clients reporting to this WEC collector, choose the compact mode. More informations in documentation, point 3.10.
+Would like to go with 'standard'(s) or 'compact' (c) mode deployement (s/c)?" 
+
+if ($Option_toolkit_mode -eq "s") {
+    write-host "STANDARD mode selected" -foregroundcolor "green" 
+    $Subscription_folder_path = "..\wef-subscriptions_STANDARD" 
+}
+elseif ($Option_toolkit_mode -eq "c") {
+    write-host "COMPACT mode selected" -foregroundcolor "green" 
+    $Subscription_folder_path = "..\wef-subscriptions_COMPACT" 
+}
+else {
+    Write-Host "Unknown option provided, aborting"  -foregroundcolor "red" 
+    Break
+}
+
+
+
+###### 4-Stopping dependant services ######
 # In case there's a third party agent for collecting logs, it shall be stopped. Here NXLog is used as an example. 
 
 write-host ""
-write-host "3-Stopping dependant services" -foregroundcolor "yellow"
+write-host "4-Stopping dependant services" -foregroundcolor "yellow"
 
 # Stop Event log collector service
 write-host ""
@@ -101,9 +126,9 @@ if (Get-Service $nxlog_service -ErrorAction SilentlyContinue) {
 
 
 
-###### 4-Import custom channel structure ######
+###### 5-Import custom channel structure ######
 write-host ""
-write-host "4-Importing custom channel structure" -foregroundcolor "yellow"
+write-host "5-Importing custom channel structure" -foregroundcolor "yellow"
 
 
 # Unload the current Event Channel structure (if existing)
@@ -134,7 +159,7 @@ wevtutil im C:\windows\system32\CustomEventChannels.man
 write-host "Successfully loaded channel structure" -foregroundcolor "green" 
 
 
-###### 5-Move all event log files to a separated hard drive ######
+###### 6-Move all event log files to a separated hard drive ######
 
 $EventLogs = wevtutil enum-logs | select-string -pattern "WEC"
 $wevtutil_init = "C:\Windows\System32\wevtutil.exe"
@@ -159,13 +184,13 @@ if ($Option_custom_location -eq "y") {
 }
 
 
-###### 6-Increasing custom event log file size ######
+###### 7-Increasing custom event log file size ######
 write-host ""
-write-host "6-Increasing custom event log file size" -foregroundcolor "yellow"
+write-host "7-Increasing custom event log file size" -foregroundcolor "yellow"
 
 # 6.1 Increase all custom event log file size to 128MB
 write-host ""
-write-host "   6.1-Increasing all log files size to 128 MB" -foregroundcolor "yellow"
+write-host "   7.1-Increasing all log files size to 128 MB" -foregroundcolor "yellow"
 foreach($EventLog in $EventLogs)
 {
     $log_size_default = 134217728 # 128MB defined in KB
@@ -181,7 +206,7 @@ foreach($EventLog in $EventLogs)
 
 # 6.2-Increasing high usage log files to higher size
 write-host ""
-write-host "   6.2-Increasing high usage log files to higher size" -foregroundcolor "yellow"
+write-host "   7.2-Increasing high usage log files to higher size" -foregroundcolor "yellow"
 
 # Verify CSV path
 write-host ""
@@ -216,9 +241,9 @@ ForEach ($item in $Imported_CSV_file){
 }
 
 
-###### 7-Starting dependant services ######
+###### 8-Starting dependant services ######
 write-host ""
-write-host "7-Starting dependant services" -foregroundcolor "yellow"
+write-host "8-Starting dependant services" -foregroundcolor "yellow"
 
 ## We start the WEC service before importing the subscriptions
 write-host ""
@@ -249,12 +274,12 @@ if (Get-Service $nxlog_service -ErrorAction SilentlyContinue) {
 }
 
 
-###### 8-Importing WEC subscriptions ######
+###### 9-Importing WEC subscriptions ######
 write-host ""
-write-host "8-Importing WEC subscriptions" -foregroundcolor "yellow"
+write-host "9-Importing WEC subscriptions" -foregroundcolor "yellow"
 
 #Import all XML subscriptions
-Set-Location "..\wef-subscriptions"
+Set-Location $Subscription_folder_path
 $wecutil_init = "C:\Windows\System32\wecutil.exe"
 
 ForEach ($Subscription in Get-ChildItem *.xml)
