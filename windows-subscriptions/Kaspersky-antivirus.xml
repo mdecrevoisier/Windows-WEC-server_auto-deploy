@@ -1,0 +1,37 @@
+<Subscription xmlns="http://schemas.microsoft.com/2006/03/windows/events/subscription">
+  <SubscriptionId>Kaspersky-antivirus</SubscriptionId>
+  <SubscriptionType>SourceInitiated</SubscriptionType>
+  <Description>Collect Kaspersky antivirus logs</Description>
+  <Enabled>false</Enabled>
+  <Uri>http://schemas.microsoft.com/wbem/wsman/1/windows/EventLog</Uri>
+  <ConfigurationMode>Custom</ConfigurationMode>
+  <Delivery Mode="Push">
+    <Batching>
+      <MaxItems>30</MaxItems>
+      <MaxLatencyTime>900000</MaxLatencyTime>
+    </Batching>
+    <PushSettings>
+      <Heartbeat Interval="1800000"/>
+    </PushSettings>
+  </Delivery>
+  <Query><![CDATA[
+    <QueryList>
+
+    <!-- Log file located on the Kaspersky server -->
+    <Query Id="0" Path="Kaspersky Event Log">
+      <Select Path="Kaspersky Event Log">*</Select>
+    </Query>
+
+    <!-- Log file located on endpoint -->
+    <Query Id="1" Path="Kaspersky Endpoint Security">
+      <Select Path="Kaspersky Endpoint Security">*</Select>
+    </Query>
+  </QueryList>]]></Query>
+  <ReadExistingEvents>false</ReadExistingEvents>
+  <TransportName>http</TransportName>
+  <ContentFormat>Events</ContentFormat>
+  <Locale Language="en-US"/>
+  <LogFile>WEC8-Antivirus1</LogFile>
+  <AllowedSourceNonDomainComputers/>
+  <AllowedSourceDomainComputers>O:NSG:NSD:(A;;GA;;;DC)(A;;GA;;;NS)(A;;GA;;;DD)</AllowedSourceDomainComputers>
+</Subscription>

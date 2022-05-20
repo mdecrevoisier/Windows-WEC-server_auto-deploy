@@ -1,0 +1,127 @@
+<Subscription xmlns="http://schemas.microsoft.com/2006/03/windows/events/subscription">
+  <SubscriptionId>Operating-System</SubscriptionId>
+  <SubscriptionType>SourceInitiated</SubscriptionType>
+  <Description>OS startup and shutdown, RPC violations, Remote SAM access, OS crashes, Time change.</Description>
+  <Enabled>true</Enabled>
+  <Uri>http://schemas.microsoft.com/wbem/wsman/1/windows/EventLog</Uri>
+  <ConfigurationMode>Custom</ConfigurationMode>
+  <Delivery Mode="Push">
+    <Batching>
+      <MaxItems>30</MaxItems>
+      <MaxLatencyTime>900000</MaxLatencyTime>
+    </Batching>
+    <PushSettings>
+      <Heartbeat Interval="1800000"/>
+    </PushSettings>
+  </Delivery>
+  <Query><![CDATA[
+    <QueryList>
+
+      <!-- Windows Kernel, startup and shutdown events -->
+      <Query Id="0">
+        <!-- Windows Kernel -->
+        <Select Path="System">*[System[Provider[@Name='Microsoft-Windows-Kernel-General']]]</Select>
+        <Select Path="System">*[System[Provider[@Name='Microsoft-Windows-Kernel-Boot']]]</Select>
+        <Select Path="System">*[System[Provider[@Name='Microsoft-Windows-Kernel-Power']]]</Select>
+        <Select Path="System">*[System[Provider[@Name='Microsoft-Windows-Kernel-PnP']]]</Select>
+        <!-- Shutdown initiate requests, with user, process and reason (if supplied) -->
+        <Select Path="System">*[System[Provider[@Name='USER32'] and (EventID=1074)]]</Select>
+        <!-- 4608: Windows is starting up -->
+        <Select Path="Security">*[System[(EventID=4608)]]</Select>
+      </Query>
+
+      <!-- Time change -->
+      <Query Id="1" Path="Security">
+        <!-- 4616: System Time Changed  -->
+        <Select Path="Security">*[System[(EventID=4616)]]</Select>
+      </Query>
+
+      <!-- DCOM events -->
+      <Query Id="2" Path="System">
+        <Select Path="System">*[System[Provider[@Name='Microsoft-Windows-DistributedCOM']]]</Select>
+      </Query>
+
+      <!-- Event log events -->
+      <Query Id="3">
+        <Select Path="System">*[System[Provider[@Name='Microsoft-Windows-Eventlog']]]</Select>
+        <Select Path="Security">*[System[Provider[@Name='Microsoft-Windows-Eventlog']]]</Select>
+      </Query>
+
+      <!-- Group policy events -->
+      <Query Id="4">
+        <!-- GPO events -->
+        <Select Path="System">*[System[Provider[@Name='Microsoft-Windows-GroupPolicy']]]</Select>
+        <Select Path="Security">*</Select>
+      </Query>
+
+      <!-- Windows Service Control Manager / Service installation -->
+      <Query Id="5">
+        <!-- Service Control Manager information -->
+        <Select Path="System">*[System[Provider[@Name='Service Control Manager']]]</Select>
+        <!-- 4697: A service was installed in the system. -->
+        <Select Path="Security">*[System[(EventID=4697)]]</Select>
+      </Query>
+
+      <!-- WMI activity -->
+      <Query Id="6" Path="Microsoft-Windows-WMI-Activity/Operational">
+        <Select Path="Microsoft-Windows-WMI-Activity/Operational">*</Select>
+      </Query>
+
+      <!-- System error and crashes -->
+      <Query Id="7">
+        <!-- 6008: The previous system shutdown was unexpected. -->
+        <Select Path="System">*[System[(EventID=6008)]]</Select>
+        <!-- Application Error and Hang, WER Application Crashes Reports -->
+        <Select Path="Application">*[System[Provider[@Name='Application Error' or @Name='Application Hang' or @Name='Windows Error Reporting']]]</Select>
+        <!-- 4621: Administrator recovered system from CrashOnAuditFail. -->
+        <Select Path="Security">*[System[(EventID=4621)]]</Select>
+      </Query>
+
+      <!-- Schedule task -->
+      <Query Id="8">
+        <!-- 4698: A scheduled task was created -->
+        <!-- 4699: A scheduled task was deleted -->
+        <!-- 4700: A scheduled task was enabled -->
+        <!-- 4701: A scheduled task was disabled -->
+        <!-- 4702: A scheduled task was updated -->
+        <Select Path="Security">*[System[(EventID &gt;=4698 and EventID &lt;=4702)]]</Select>
+        <!-- Former schedule task events -->
+        <Select Path="Microsoft-Windows-TaskScheduler/Operational">*[System[Provider[@Name='Microsoft-Windows-TaskScheduler'] and (EventID=106 or EventID=129 or EventID=141 or EventID=142 or EventID=200 or EventID=201)]]</Select>
+      </Query>
+
+      <!-- Windows update and packages -->
+      <Query Id="9" >
+        <Select Path="Microsoft-Windows-WindowsUpdateClient/Operational">*[System[Provider[@Name='Microsoft-Windows-WindowsUpdateClient']]]</Select>
+        <Select Path="Setup">*[System[Provider[@Name='Microsoft-Windows-Servicing']]]</Select>
+      </Query>
+
+      <!-- MSI packages -->
+      <Query Id="10">
+        <!-- MSI Installer Notifications -->
+        <Select Path="Application">*[System[Provider[@Name='MsiInstaller']]]</Select>
+        <!-- User Application Installation Activities -->
+        <Select Path="Microsoft-Windows-Application-Experience/Program-Inventory">*</Select>
+      </Query>
+
+      <!-- Windows Event Forwarding (WEF) -->
+      <Query Id="11" Path="Microsoft-Windows-Forwarding/Operational">
+        <Select Path="Microsoft-Windows-Forwarding/Operational">*</Select>
+      </Query>
+
+
+    <!-- Printer-->
+    <!-- Per default the Operational channel is disabled and requires to be enabled via registry key -->
+      <Query Id="15" Path="Microsoft-Windows-PrintService">
+        <Select Path="Microsoft-Windows-PrintService/Operational">*</Select>
+        <Select Path="Microsoft-Windows-PrintService/Admin">*</Select>
+      </Query>
+
+    </QueryList>]]></Query>
+    <ReadExistingEvents>false</ReadExistingEvents>
+    <TransportName>http</TransportName>
+    <ContentFormat>Events</ContentFormat>
+    <Locale Language="en-US"/>
+    <LogFile>WEC5-Operating-System</LogFile>
+    <AllowedSourceNonDomainComputers/>
+    <AllowedSourceDomainComputers>O:NSG:NSD:(A;;GA;;;DC)(A;;GA;;;NS)(A;;GA;;;DD)</AllowedSourceDomainComputers>
+  </Subscription>

@@ -1,0 +1,32 @@
+<Subscription xmlns="http://schemas.microsoft.com/2006/03/windows/events/subscription">
+  <SubscriptionId>Advanced-Threat-Analytics</SubscriptionId>
+  <SubscriptionType>SourceInitiated</SubscriptionType>
+  <Description>Microsoft ATA Core server logs - LOGS CANNOT BE USED FOR USE CASES (requires SYSLOG)</Description>
+  <Enabled>false</Enabled>
+  <Uri>http://schemas.microsoft.com/wbem/wsman/1/windows/EventLog</Uri>
+  <ConfigurationMode>Custom</ConfigurationMode>
+  <Delivery Mode="Push">
+    <Batching>
+      <MaxItems>30</MaxItems>
+      <MaxLatencyTime>900000</MaxLatencyTime>
+    </Batching>
+    <PushSettings>
+      <Heartbeat Interval="1800000"/>
+    </PushSettings>
+  </Delivery>
+  <Query><![CDATA[
+    <QueryList>
+
+    <!-- Only Core server -->
+    <Query Id="0" Path="Microsoft ATA">
+      <Select Path="Microsoft ATA">*</Select>
+    </Query>
+    </QueryList>]]></Query>
+  <ReadExistingEvents>false</ReadExistingEvents>
+  <TransportName>http</TransportName>
+  <ContentFormat>Events</ContentFormat>
+  <Locale Language="en-US"/>
+  <LogFile>WEC9-Advanced-Threat-Analytics</LogFile>
+  <AllowedSourceNonDomainComputers/>
+  <AllowedSourceDomainComputers>O:NSG:NSD:(A;;GA;;;NS)</AllowedSourceDomainComputers>
+</Subscription>

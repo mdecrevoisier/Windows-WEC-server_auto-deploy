@@ -1,0 +1,17 @@
+Log_name, Log_size_in_Bytes
+"WEC-Authentication", 3221225472
+"WEC5-Operating-System", 2147483648
+"WEC-Kerberos", 2147483648
+"WEC-Process-Execution", 1073741824
+"WEC4-Shares", 1073741824
+"WEC6-Sysmon", 1073741824
+"WEC-Powershell", 1073741824
+"WEC2-Object-Manipulation", 536870912
+"WEC7-Privilege-Use", 536870912
+"WEC7-Active-Directory", 536870912
+"WEC8-Operational-Security", 536870912
+"WEC3-Account-Management", 536870912
+"WEC2-Task-Scheduler", 536870912
+"WEC8-SQL-server", 536870912
+
+

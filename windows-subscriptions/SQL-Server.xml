@@ -1,0 +1,57 @@
+<Subscription xmlns="http://schemas.microsoft.com/2006/03/windows/events/subscription">
+  <SubscriptionId>SQL-Server</SubscriptionId>
+  <SubscriptionType>SourceInitiated</SubscriptionType>
+  <Description>SQL Server logs (requires specific auditing settings)</Description>
+  <Enabled>false</Enabled>
+  <Uri>http://schemas.microsoft.com/wbem/wsman/1/windows/EventLog</Uri>
+  <ConfigurationMode>Custom</ConfigurationMode>
+  <Delivery Mode="Push">
+    <Batching>
+      <MaxItems>30</MaxItems>
+      <MaxLatencyTime>900000</MaxLatencyTime>
+    </Batching>
+    <PushSettings>
+      <Heartbeat Interval="1800000"/>
+    </PushSettings>
+  </Delivery>
+  <Query><![CDATA[
+    <QueryList>
+
+      <!-- SQL Server standard events --> 
+      <Query Id="0" Path="Application">
+        <!-- 33205 Standard SQL Server transaction event. -->
+        <!-- 15457 Configuration option 'x' changed from 0 to 1. -->
+        <Select Path="Application">*[System[(EventID=33205 or EventID=15457)]]</Select>
+      </Query>
+       
+      <!-- SQL Server 2014 authentication events --> 
+      <Query Id="1" Path="Application"> 
+        <!-- 18453  Success login with Windows authentication. -->
+        <!-- 18454  Success login with SQL Server authentication. -->
+        <!-- 18455  Success login. -->
+        <!-- 18456  Failed login. -->
+        <Select Path="Application">*[System[(EventID &gt;=18453 and EventID &lt;=18456)]]</Select>      
+      </Query>
+
+      <!-- SQL Server 2017 authentication events --> 
+      <Query Id="2" Path="Application"> 
+        <!-- 28046  Success login with authentication X. -->
+        <!-- 28047  Failed login with error X. -->
+        <!-- 28048  Login attemp failed with error X. -->
+        <Select Path="Application">*[System[(EventID &gt;=28046 and EventID &lt;=28048)]]</Select>      
+      </Query>      
+
+      <!-- SQL server events from LogBinder for SQL -->
+      <Query Id="3" Path="Application">
+        <Select Path="System">*[System[(EventID &gt;=24001 and EventID &lt;=24375)]]</Select>
+      </Query>
+      
+    </QueryList>]]></Query>
+  <ReadExistingEvents>false</ReadExistingEvents>
+  <TransportName>http</TransportName>
+  <ContentFormat>Events</ContentFormat>
+  <Locale Language="en-US"/>
+  <LogFile>WEC8-SQL-server</LogFile>
+  <AllowedSourceNonDomainComputers/>
+  <AllowedSourceDomainComputers>O:NSG:NSD:(A;;GA;;;NS)</AllowedSourceDomainComputers>
+</Subscription>

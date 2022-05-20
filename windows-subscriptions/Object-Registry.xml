@@ -1,0 +1,57 @@
+<Subscription xmlns="http://schemas.microsoft.com/2006/03/windows/events/subscription">
+  <SubscriptionId>Object-Registry</SubscriptionId>
+  <SubscriptionType>SourceInitiated</SubscriptionType>
+  <Description>Manipulation of handles, SACLs, object deletions, and permissions.</Description>
+  <Enabled>true</Enabled>
+  <Uri>http://schemas.microsoft.com/wbem/wsman/1/windows/EventLog</Uri>
+  <ConfigurationMode>Custom</ConfigurationMode>
+  <Delivery Mode="Push">
+    <Batching>
+      <MaxItems>30</MaxItems>
+      <MaxLatencyTime>900000</MaxLatencyTime>
+    </Batching>
+    <PushSettings>
+      <Heartbeat Interval="1800000"/>
+    </PushSettings>
+  </Delivery>
+  <Query><![CDATA[
+    <QueryList>
+
+      <!-- Policy Change Events -->
+      <Query Id="0" Path="Security">
+        <!-- 4715: The audit policy (SACL) on an object was changed. -->
+        <!-- 4817: Auditing settings on object were changed. -->
+        <!-- 4656: A handle to an object was requested. -->
+        <!-- 4658: The handle to an object was closed. -->
+        <!-- 4660: An object was deleted. -->
+        <!-- 4661: A handle to an object was requested. -->
+        <!-- 4663: An attempt was made to access an object. -->
+        <!-- 4664: An attempt was made to create a hard link -->
+        <!-- 4670: Permissions on an object were changed. -->
+        <Select Path="Security">*[System[(EventID=4715 or EventID=4817 or EventID=4656 or EventID=4658 or EventID=4660 or EventID=4661 or EventID=4663 or EventID=4664 or EventID=4670)]]</Select>
+      </Query>
+      
+      <Query Id="1" Path="System">
+        <!-- 20: The last shutdown's success status was true. The last boot's success status was true. -->
+        <!-- 109: The kernel power manager has initiated a shutdown transition. -->
+        <!-- 1074: The process <PROCESS> has initiated the restart of computer HOST on behalf of user DOMAIN-USER -->
+        <!-- 1076: The reason supplied by user DOMAIN-USER for the last unexpected shutdown of this computer is:  -->
+        <!-- 6013: The system uptime is 10 seconds. -->
+        <Select Path="System">*[System[(EventID=20 or EventID=109 or EventID=1074 or EventID=1076 or EventID=6013)]]</Select>
+      </Query>
+
+      <!-- Registry -->
+      <Query Id="0" Path="Security">
+        <!-- Registry modified events for Operations: New Registry Value created (%%1904), Existing Registry Value modified (%%1905), Registry Value Deleted (%%1906) -->
+        <Select Path="Security">*[System[(EventID=4657)]] and ((*[EventData[Data[@Name="OperationType"] = "%%1904"]]) or (*[EventData[Data[@Name="OperationType"] = "%%1905"]]) or (*[EventData[Data[@Name="OperationType"] = "%%1906"]]))</Select>
+      </Query>
+
+    </QueryList>]]></Query>
+    <ReadExistingEvents>false</ReadExistingEvents>
+    <TransportName>http</TransportName>
+    <ContentFormat>Events</ContentFormat>
+    <Locale Language="en-US"/>
+    <LogFile>WEC2-Object-Manipulation</LogFile>
+    <AllowedSourceNonDomainComputers/>
+    <AllowedSourceDomainComputers>O:NSG:NSD:(A;;GA;;;DC)(A;;GA;;;NS)(A;;GA;;;DD)</AllowedSourceDomainComputers>
+  </Subscription>

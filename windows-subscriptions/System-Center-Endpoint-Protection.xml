@@ -1,0 +1,37 @@
+<Subscription xmlns="http://schemas.microsoft.com/2006/03/windows/events/subscription">
+  <SubscriptionId>SCEP-antivirus</SubscriptionId>
+  <SubscriptionType>SourceInitiated</SubscriptionType>
+  <Description>Collect System Center Endpoint Protection</Description>
+  <Enabled>false</Enabled>
+  <Uri>http://schemas.microsoft.com/wbem/wsman/1/windows/EventLog</Uri>
+  <ConfigurationMode>Custom</ConfigurationMode>
+  <Delivery Mode="Push">
+    <Batching>
+      <MaxItems>30</MaxItems>
+      <MaxLatencyTime>900000</MaxLatencyTime>
+    </Batching>
+    <PushSettings>
+      <Heartbeat Interval="1800000"/>
+    </PushSettings>
+  </Delivery>
+  <Query><![CDATA[
+    <QueryList>
+
+      <!-- SCEP use the same event IDs as Windows Defender, but writes it in a different location -->
+
+      <QueryList>
+        <Query Id="0" Path="System">
+          <Select Path="System">*[System[Provider[@Name='Microsoft Antimalware' or @Name='Microsoft Forefront Endpoint Protection' or @Name='Microsoft Forefront Endpoint Protection 2']]]</Select>
+        </Query>
+      </QueryList>
+
+    </QueryList>
+  </QueryList>]]></Query>
+  <ReadExistingEvents>false</ReadExistingEvents>
+  <TransportName>http</TransportName>
+  <ContentFormat>Events</ContentFormat>
+  <Locale Language="en-US"/>
+  <LogFile>WEC2-Windows-Defender</LogFile>
+  <AllowedSourceNonDomainComputers/>
+  <AllowedSourceDomainComputers>O:NSG:NSD:(A;;GA;;;DC)(A;;GA;;;NS)(A;;GA;;;DD)</AllowedSourceDomainComputers>
+</Subscription>

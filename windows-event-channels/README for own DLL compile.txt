@@ -1,0 +1,1 @@
+In case you would like to compile the DLL by yourself for security reasons, please follow the steps described in https://docs.microsoft.com/fr-fr/archive/blogs/russellt/creating-custom-windows-event-forwarding-logs.
