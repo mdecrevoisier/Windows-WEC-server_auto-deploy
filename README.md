@@ -29,5 +29,5 @@ The scripts have been tested on the following environments:
 * Server 2019
 
 ## Pending
-[ ]Replace
-[ ]Add performance settings from [OTRF/Blacksmith](https://github.com/OTRF/Blacksmith/blob/master/resources/scripts/powershell/auditing/Configure-WEC.ps1)
+[ ] Replace some PowerShell commands call with a direct "cmd /c" call
+[ ] Add performance settings from [OTRF/Blacksmith](https://github.com/OTRF/Blacksmith/blob/master/resources/scripts/powershell/auditing/Configure-WEC.ps1)

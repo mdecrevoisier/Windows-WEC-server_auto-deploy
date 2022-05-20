@@ -28,7 +28,7 @@
 ###### 1-Verify if configuration folders are present ######
 write-host ""
 write-host "1-Verifying configuration folders presence" -foregroundcolor "yellow"
-if ((Test-Path "windows-event-channels") -And (Test-Path "windows-subscriptions"){
+if ((Test-Path windows-event-channels) -And (Test-Path windows-subscriptions)){
     write-host "Configuration folders exist, continuing..." -foregroundcolor "green" 
 }
 else {
@@ -65,31 +65,6 @@ if ($Option_custom_location -eq "y") {
 else {
     write-host "Keeping custom event log files in the default location C:\Windows\System32\winevt\Logs\" -foregroundcolor "magenta" 
 }
-
-
-
-###### 3-Prompt for choosing standard or compact toolkit mode ######
-write-host ""
-write-host "2-Would you like to go with 'standard' or 'compact' toolkit mode?" -foregroundcolor "yellow"
-
-# Prompt requesting for choosing the toolkit mode
-$Option_toolkit_mode = Read-Host -Prompt "Standard mode is the default and most suitable mode for most organization with less than 500 source clients. 
-In case of having more than 500 source clients reporting to this WEC collector, choose the compact mode. More informations in documentation, point 3.10.
-Would like to go with 'standard'(s) or 'compact' (c) mode deployement (s/c)?" 
-
-if ($Option_toolkit_mode -eq "s") {
-    write-host "STANDARD mode selected" -foregroundcolor "green" 
-    $Subscription_folder_path = "..\wef-subscriptions_STANDARD" 
-}
-elseif ($Option_toolkit_mode -eq "c") {
-    write-host "COMPACT mode selected" -foregroundcolor "green" 
-    $Subscription_folder_path = "..\wef-subscriptions_COMPACT" 
-}
-else {
-    Write-Host "Unknown option provided, aborting"  -foregroundcolor "red" 
-    Break
-}
-
 
 
 ###### 4-Stopping dependant services ######
@@ -279,7 +254,7 @@ write-host ""
 write-host "9-Importing WEC subscriptions" -foregroundcolor "yellow"
 
 #Import all XML subscriptions
-Set-Location $Subscription_folder_path
+Set-Location "../windows-subscriptions"
 $wecutil_init = "C:\Windows\System32\wecutil.exe"
 
 ForEach ($Subscription in Get-ChildItem *.xml)
