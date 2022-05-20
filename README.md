@@ -21,6 +21,9 @@ The scripts have to be executed on a future Windows Event collector server:
 # 2-Deploy toolkit
 ![](/demo/2-Deploy-Toolkit.gif)
 
+# 3-Event viewer overview
+![](/demo/3-Event-viewer-overview.gif)
+
 ## Supported environment
 The scripts have been tested on the following environments:
 * Server 2008 R2
